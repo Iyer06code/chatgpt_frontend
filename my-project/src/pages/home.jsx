@@ -1,6 +1,6 @@
 import React from "react";
 
-const Home = () => {
+const home = () => {
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4">
       {/* Main content */}
