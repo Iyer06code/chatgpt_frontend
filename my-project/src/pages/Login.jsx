@@ -41,10 +41,11 @@ const Login = () => {
             if (response.ok) {
                 // ✅ Store tokens in localStorage
                 localStorage.setItem("access_token", data.access_token);
+                localStorage.setItem("user_email", email);
                 localStorage.setItem("refresh_token", data.refresh_token);
                 localStorage.setItem("token_type", data.token_type);
 
-                navigate("/");
+                navigate("/dashboard");
                 setMessage("✅ Login successful!");
 
                 // Optional: redirect after login

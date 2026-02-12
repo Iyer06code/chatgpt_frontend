@@ -1,19 +1,26 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import './App.css'
-import Home from './pages/home'
-import About from './pages/About'
-import Contact from './pages/Contact'
-import Header from './components/Header'
-import Footer from './components/Footer'
-import Login from './pages/Login'
-import SignUp from './pages/SignUp'
-import Dashboard from './pages/Dashboard'
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import "./App.css";
 
+import Home from "./pages/home";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
+import Dashboard from "./pages/Dashboard";
 
-function App() {
+/* ------------------- Layout Wrapper ------------------- */
+
+function Layout() {
+  const location = useLocation();
+
+  // Hide header & footer on dashboard
+  const hideLayout = location.pathname === "/dashboard";
+
   return (
-    <Router>
-      <Header />
+    <>
+      {!hideLayout && <Header />}
 
       <Routes>
         <Route path="/" element={<Home />} />
@@ -21,11 +28,31 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+
+        {/* 🔐 Protected Dashboard */}
+        <Route
+          path="/dashboard"
+          element={
+            localStorage.getItem("access_token")
+              ? <Dashboard />
+              : <Navigate to="/login" />
+          }
+        />
       </Routes>
-      <Footer />
-    </Router>
-  )
+
+      {!hideLayout && <Footer />}
+    </>
+  );
 }
 
-export default App
+/* ------------------- App Root ------------------- */
+
+function App() {
+  return (
+    <Router>
+      <Layout />
+    </Router>
+  );
+}
+
+export default App;
