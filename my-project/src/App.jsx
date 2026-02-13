@@ -15,8 +15,9 @@ import Dashboard from "./pages/Dashboard";
 function Layout() {
   const location = useLocation();
 
-  // Hide header & footer on dashboard
-  const hideLayout = location.pathname === "/dashboard";
+  // Hide header & footer on dashboard, and on home when logged in (sidebar layout)
+  const isLoggedIn = !!localStorage.getItem("access_token");
+  const hideLayout = location.pathname === "/dashboard" || (location.pathname === "/" && isLoggedIn);
 
   return (
     <>
@@ -28,6 +29,8 @@ function Layout() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+
 
         {/* 🔐 Protected Dashboard */}
         <Route

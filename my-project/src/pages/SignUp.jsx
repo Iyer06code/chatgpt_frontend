@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -34,10 +36,42 @@ const SignUp = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage("✅ Account created successfully!");
-        setEmail("");
-        setPassword("");
-        setConfirmPassword("");
+        setMessage("✅ Account created! Logging you in...");
+
+        // 🔹 Auto-Login after Signup
+        try {
+          const loginResponse = await fetch("http://127.0.0.1:8000/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: email,
+              password: password,
+            }),
+          });
+
+          const loginData = await loginResponse.json();
+
+          if (loginResponse.ok) {
+            // Store tokens
+            localStorage.setItem("access_token", loginData.access_token);
+            localStorage.setItem("user_email", email);
+            localStorage.setItem("refresh_token", loginData.refresh_token);
+            localStorage.setItem("token_type", loginData.token_type);
+
+            // Redirect to Home
+            navigate("/");
+          } else {
+            // Fallback if login fails
+            setMessage("✅ Account created! Redirecting to login...");
+            setTimeout(() => navigate("/login"), 1500);
+          }
+        } catch (loginError) {
+          console.error("Auto-login error:", loginError);
+          navigate("/login");
+        }
+
       } else {
         setMessage(`❌ ${data.detail || "Signup failed"}`);
       }

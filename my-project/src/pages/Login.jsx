@@ -45,7 +45,7 @@ const Login = () => {
                 localStorage.setItem("refresh_token", data.refresh_token);
                 localStorage.setItem("token_type", data.token_type);
 
-                navigate("/dashboard");
+                navigate("/");
                 setMessage("✅ Login successful!");
 
                 // Optional: redirect after login

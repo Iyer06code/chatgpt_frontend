@@ -44,8 +44,12 @@ const Header = () => {
     }, []);
 
     const handleLogout = () => {
-        localStorage.clear();      // clears tokens + chat history
-        navigate("/home");         // go to Home page
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("user_email");
+        localStorage.removeItem("refresh_token");
+        localStorage.removeItem("token_type");
+        navigate("/");
+        window.location.reload();
     };
 
 
